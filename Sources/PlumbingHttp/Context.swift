@@ -1,8 +1,6 @@
 import Hummingbird
 import Logging
 
-extension Response: Error {}
-
 public struct Context {
   public let req: Request
   public let ctx: PlumbingRequestContext
