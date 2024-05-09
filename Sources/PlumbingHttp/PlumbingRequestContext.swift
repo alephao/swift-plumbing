@@ -39,7 +39,11 @@ extension PlumbingRequestContext {
       case invalidContentType
     }
 
-    public func encode(_ value: some Encodable, from request: Request, context: some BaseRequestContext)
+    public func encode(
+      _ value: some Encodable,
+      from request: Request,
+      context: some BaseRequestContext
+    )
       throws -> Response
     {
       switch request.headers[values: .contentType].first {

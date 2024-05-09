@@ -81,11 +81,10 @@ precedencegroup infixr9 {
   higherThan: infixl9
 }
 
-infix operator |>: infixl1
-infix operator <|: infixr0
-infix operator >>>: infixr9
-infix operator <<<: infixr9
-infix operator <|>: infixl3
-infix operator >>=: infixr1
-infix operator >=>: infixr1
-
+infix operator |> : infixl1
+infix operator <| : infixr0
+infix operator >>> : infixr9
+infix operator <<< : infixr9
+infix operator <|> : infixl3
+infix operator >>= : infixr1
+infix operator >=> : infixr1

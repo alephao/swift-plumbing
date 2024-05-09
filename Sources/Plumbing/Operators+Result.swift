@@ -9,11 +9,15 @@ public func map<A, B, F: Error>(_ transform: @escaping (A) -> B) -> (Result<A, F
   { result in result.map(transform) }
 }
 
-public func mapError<A, F: Error, G: Error>(_ transform: @escaping (F) -> G) -> (Result<A, F>) -> Result<A, G> {
+public func mapError<A, F: Error, G: Error>(_ transform: @escaping (F) -> G) -> (Result<A, F>) ->
+  Result<A, G>
+{
   { result in result.mapError(transform) }
 }
 
-public func mapAsync<A, B, F: Error>(_ transform: @escaping (A) async -> B) -> (Result<A, F>) async -> Result<B, F> {
+public func mapAsync<A, B, F: Error>(_ transform: @escaping (A) async -> B) -> (Result<A, F>) async
+  -> Result<B, F>
+{
   { result in
     switch result {
     case .success(let a):
@@ -25,7 +29,9 @@ public func mapAsync<A, B, F: Error>(_ transform: @escaping (A) async -> B) -> (
   }
 }
 
-public func mapErrorAsync<A, F: Error, G: Error>(_ transform: @escaping (F) async -> G) -> (Result<A, F>) async -> Result<A, G> {
+public func mapErrorAsync<A, F: Error, G: Error>(_ transform: @escaping (F) async -> G) -> (
+  Result<A, F>
+) async -> Result<A, G> {
   { result in
     switch result {
     case .success(let a): return .success(a)
@@ -36,15 +42,21 @@ public func mapErrorAsync<A, F: Error, G: Error>(_ transform: @escaping (F) asyn
   }
 }
 
-public func flatMap<A, B, F: Error>(_ transform: @escaping (A) -> Result<B, F>) -> (Result<A, F>) -> Result<B, F> {
+public func flatMap<A, B, F: Error>(_ transform: @escaping (A) -> Result<B, F>) -> (Result<A, F>) ->
+  Result<B, F>
+{
   { result in result.flatMap(transform) }
 }
 
-public func flatMapError<A, F: Error, G: Error>(_ transform: @escaping (F) -> Result<A, G>) -> (Result<A, F>) -> Result<A, G> {
+public func flatMapError<A, F: Error, G: Error>(_ transform: @escaping (F) -> Result<A, G>) -> (
+  Result<A, F>
+) -> Result<A, G> {
   { result in result.flatMapError(transform) }
 }
 
-public func flatMapAsync<A, B, F: Error>(_ transform: @escaping (A) async -> Result<B, F>) -> (Result<A, F>) async -> Result<B, F> {
+public func flatMapAsync<A, B, F: Error>(_ transform: @escaping (A) async -> Result<B, F>) -> (
+  Result<A, F>
+) async -> Result<B, F> {
   { result in
     switch result {
     case .success(let a):

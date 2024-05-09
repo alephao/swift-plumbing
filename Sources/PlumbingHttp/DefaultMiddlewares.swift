@@ -1,6 +1,6 @@
+import Foundation
 import Hummingbird
 import Logging
-import Foundation
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking
@@ -19,10 +19,10 @@ public func loggerMiddleware(logger: Logger) -> PlumbingHTTPMiddleware {
       let startTime = Date().timeIntervalSince1970
       logger.log(
         level: .info,
-      """
-      \(requestID) [Req] \(req.method) \
-      \(req.uri.path)
-      """
+        """
+        \(requestID) [Req] \(req.method) \
+        \(req.uri.path)
+        """
       )
       let res = await next()
       let endTime = Date().timeIntervalSince1970

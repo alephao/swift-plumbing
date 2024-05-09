@@ -9,9 +9,9 @@ public typealias T8<A, B, C, D, E, F, G, Z> = (A, (B, (C, (D, (E, (F, (G, Z)))))
 precedencegroup TupleAppend {
   associativity: right
 }
-infix operator .*.: TupleAppend
+infix operator .*. : TupleAppend
 
-public func .*. <A, B> (lhs: A, rhs: B) -> T2<A, B> {
+public func .*. <A, B>(lhs: A, rhs: B) -> T2<A, B> {
   (lhs, rhs)
 }
 
@@ -45,14 +45,20 @@ public func over3<A, B, C, R, Z>(_ f: @escaping (C) -> R) -> (T4<A, B, C, Z>) ->
   { t in get1(t) .*. get2(t) .*. f(get3(t)) .*. rest(t) }
 }
 
-public func over4<A, B, C, D, R, Z>(_ f: @escaping (D) -> R) -> (T5<A, B, C, D, Z>) -> T5<A, B, C, R, Z> {
+public func over4<A, B, C, D, R, Z>(_ f: @escaping (D) -> R) -> (T5<A, B, C, D, Z>) -> T5<
+  A, B, C, R, Z
+> {
   { t in get1(t) .*. get2(t) .*. get3(t) .*. f(get4(t)) .*. rest(t) }
 }
 
-public func over5<A, B, C, D, E, R, Z>(_ f: @escaping (E) -> R) -> (T6<A, B, C, D, E, Z>) -> T6<A, B, C, D, R, Z> {
+public func over5<A, B, C, D, E, R, Z>(_ f: @escaping (E) -> R) -> (T6<A, B, C, D, E, Z>) -> T6<
+  A, B, C, D, R, Z
+> {
   { t in get1(t) .*. get2(t) .*. get3(t) .*. get4(t) .*. f(get5(t)) .*. rest(t) }
 }
 
-public func over6<A, B, C, D, E, F, R, Z>(_ f: @escaping (F) -> R) -> (T7<A, B, C, D, E, F, Z>) -> T7<A, B, C, D, E, R, Z> {
+public func over6<A, B, C, D, E, F, R, Z>(_ f: @escaping (F) -> R) -> (T7<A, B, C, D, E, F, Z>) ->
+  T7<A, B, C, D, E, R, Z>
+{
   { t in get1(t) .*. get2(t) .*. get3(t) .*. get4(t) .*. get5(t) .*. f(get6(t)) .*. rest(t) }
 }

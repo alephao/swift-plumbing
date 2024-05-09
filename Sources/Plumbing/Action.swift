@@ -14,7 +14,9 @@ extension Action {
     _ action: @escaping (ActionInput) async -> Result<ActionSuccess, ActionFailure>,
     mapInput: @escaping (Input) -> ActionInput,
     flatMap _flatMap: @escaping (ActionSuccess, Input) -> Result<OutputSuccess, OutputFailure>,
-    flatMapError _flatMapError: @escaping (ActionFailure, Input) -> Result<OutputSuccess, OutputFailure>
+    flatMapError _flatMapError: @escaping (ActionFailure, Input) -> Result<
+      OutputSuccess, OutputFailure
+    >
   ) -> (Input) async -> Result<OutputSuccess, OutputFailure> {
     { input in
       let result = await action(mapInput(input))
@@ -56,7 +58,9 @@ extension Action {
   >(
     _ action: @escaping (Input) async -> Result<ActionSuccess, ActionFailure>,
     flatMap _flatMap: @escaping (ActionSuccess, Input) -> Result<OutputSuccess, OutputFailure>,
-    flatMapError _flatMapError: @escaping (ActionFailure, Input) -> Result<OutputSuccess, OutputFailure>
+    flatMapError _flatMapError: @escaping (ActionFailure, Input) -> Result<
+      OutputSuccess, OutputFailure
+    >
   ) -> (Input) async -> Result<OutputSuccess, OutputFailure> {
     run(
       action,
@@ -102,7 +106,7 @@ extension Action {
 
   public static func `switch`<Input, OtherActionInput, Failure: Error>(
     to otherAction: @escaping (OtherActionInput) async -> Result<Input, Failure>,
-    whenUnwrapped unwrap: @escaping (Input) -> Optional<OtherActionInput>
+    whenUnwrapped unwrap: @escaping (Input) -> OtherActionInput?
   ) -> (Input) async -> Result<Input, Failure> {
     { input in
       if let unwrapped = unwrap(input) {
