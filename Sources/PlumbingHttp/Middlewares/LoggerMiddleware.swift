@@ -25,7 +25,10 @@ public func loggerMiddleware(logger: Logger) -> PlumbingHTTPMiddleware {
       let endTime = Date().timeIntervalSince1970
       logger.log(
         level: .info,
-        "\(requestID) [Res] \(res.status.code) in \(Int((endTime - startTime) * 1000))ms"
+        """
+        \(requestID) [Res] \(res.status.code) \
+        in \(Int((endTime - startTime) * 1000))ms
+        """
       )
       return res
     }

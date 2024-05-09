@@ -20,7 +20,7 @@ public func publicAssetsMiddleware(
         await fullPath
         |> Action.run(
           getFileAttributes(localFileSystem),
-          map: { a, b in a .*. b },
+          map: .*.,
           mapError: discardRight
         )
         >=> Action.run(
