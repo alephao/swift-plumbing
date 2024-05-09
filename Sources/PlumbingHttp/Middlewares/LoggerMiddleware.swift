@@ -6,9 +6,6 @@ import Logging
   import FoundationNetworking
 #endif
 
-public typealias PlumbingHTTPHandler = @Sendable () async -> Response
-public typealias PlumbingHTTPMiddleware = (@escaping PlumbingHTTPHandler) -> PlumbingHTTPHandler
-
 public func loggerMiddleware(logger: Logger) -> PlumbingHTTPMiddleware {
   { next in
     {
