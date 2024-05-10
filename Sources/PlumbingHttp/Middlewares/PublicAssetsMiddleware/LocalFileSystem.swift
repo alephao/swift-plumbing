@@ -16,13 +16,6 @@ public struct LocalFileSystem {
     public let size: Int
     /// Last time file was modified
     public let modificationDate: Date
-
-    /// Initialize FileAttributes
-    init(isFolder: Bool, size: Int, modificationDate: Date) {
-      self.isFolder = isFolder
-      self.size = size
-      self.modificationDate = modificationDate
-    }
   }
 
   let rootFolder: String
