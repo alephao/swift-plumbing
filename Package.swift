@@ -9,13 +9,21 @@ let package = Package(
     .iOS(.v15),
   ],
   products: [
+    .executable(name: "plumb", targets: ["Plumb"]),
     .library(name: "Plumbing", targets: ["Plumbing"]),
     .library(name: "PlumbingHttp", targets: ["PlumbingHttp"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-beta.4")
+    .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-beta.4"),
+    .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
   ],
   targets: [
+    .executableTarget(
+      name: "Plumb",
+      dependencies: [
+        .product(name: "ArgumentParser", package: "swift-argument-parser")
+      ]
+    ),
     .target(name: "Plumbing"),
     .target(
       name: "PlumbingHttp",
