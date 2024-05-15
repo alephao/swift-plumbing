@@ -1,7 +1,7 @@
 public enum Action {}
 public typealias A = Action
 
-// MARK: - Builders
+// MARK: - Result
 extension Action {
   public static func run<
     Input,
@@ -87,6 +87,55 @@ extension Action {
       map: _map,
       mapError: _mapError
     )
+  }
+}
+
+// MARK: Throwable
+extension Action {
+  public static func run<
+    Input,
+    OutputSuccess,
+    OutputFailure: Error,
+    ActionInput,
+    ActionSuccess
+  >(
+    _ action: @escaping (ActionInput) async throws -> ActionSuccess,
+    mapInput: @escaping (Input) -> ActionInput,
+    flatMap _flatMap: @escaping (ActionSuccess, Input) -> Result<OutputSuccess, OutputFailure>,
+    flatMapError _flatMapError: @escaping (any Error, Input) -> Result<
+      OutputSuccess, OutputFailure
+    >
+  ) -> (Input) async -> Result<OutputSuccess, OutputFailure> {
+    { input in
+      do {
+        let success = try await action(mapInput(input))
+        return _flatMap(success, input)
+      } catch {
+        return _flatMapError(error, input)
+      }
+    }
+  }
+
+  public static func run<
+    Input,
+    OutputSuccess,
+    OutputFailure: Error,
+    ActionInput,
+    ActionSuccess
+  >(
+    _ action: @escaping (ActionInput) async throws -> ActionSuccess,
+    mapInput: @escaping (Input) -> ActionInput,
+    map _map: @escaping (ActionSuccess, Input) -> OutputSuccess,
+    mapError _mapError: @escaping (any Error, Input) -> OutputFailure
+  ) -> (Input) async -> Result<OutputSuccess, OutputFailure> {
+    { input in
+      do {
+        let success = try await action(mapInput(input))
+        return .success(_map(success, input))
+      } catch {
+        return .failure(_mapError(error, input))
+      }
+    }
   }
 }
 
