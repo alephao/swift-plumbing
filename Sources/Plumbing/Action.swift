@@ -197,7 +197,7 @@ extension Action {
 
 // MARK: - Unwrap
 extension Action {
-  static func unwrap<Input, Failure: Error>(
+  public static func unwrap<Input, Failure: Error>(
     orFail fail: @escaping () -> Failure
   ) -> (Input?) async -> Result<Input, Failure> {
     { input in
@@ -208,7 +208,7 @@ extension Action {
     }
   }
 
-  static func unwrap<Input, Failure: Error>(
+  public static func unwrap<Input, Failure: Error>(
     orUse alternative: @escaping () -> Input
   ) -> (Input?) async -> Result<Input, Failure> {
     { input in
