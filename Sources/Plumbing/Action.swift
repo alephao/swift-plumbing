@@ -90,9 +90,9 @@ extension Action {
   }
 }
 
-// MARK: - Short-Circuit
+// MARK: - Middleware
 extension Action {
-  public static func `switch`<Input, Failure: Error>(
+  public static func middleware<Input, Failure: Error>(
     to otherAction: @escaping (Input) async -> Result<Input, Failure>,
     when predicate: @escaping (Input) -> Bool
   ) -> (Input) async -> Result<Input, Failure> {
@@ -104,7 +104,7 @@ extension Action {
     }
   }
 
-  public static func `switch`<Input, OtherActionInput, Failure: Error>(
+  public static func middleware<Input, OtherActionInput, Failure: Error>(
     to otherAction: @escaping (OtherActionInput) async -> Result<Input, Failure>,
     whenUnwrapped unwrap: @escaping (Input) -> OtherActionInput?
   ) -> (Input) async -> Result<Input, Failure> {
