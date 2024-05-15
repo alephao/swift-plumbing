@@ -117,6 +117,31 @@ extension Action {
   }
 }
 
+// MARK: - Unwrap
+extension Action {
+  static func unwrap<Input, Failure: Error>(
+    orFail fail: @escaping () -> Failure
+  ) -> (Input?) async -> Result<Input, Failure> {
+    { input in
+      guard let input else {
+        return .failure(fail())
+      }
+      return .success(input)
+    }
+  }
+
+  static func unwrap<Input, Failure: Error>(
+    orUse alternative: @escaping () -> Input
+  ) -> (Input?) async -> Result<Input, Failure> {
+    { input in
+      guard let input else {
+        return .success(alternative())
+      }
+      return .success(input)
+    }
+  }
+}
+
 // MARK: - Fallback
 // I guess people call it "choose" instead of fallback, but fallback sounds more intuitive IMO
 extension Action {
