@@ -166,6 +166,35 @@ extension Action {
   }
 }
 
+// MARK: Fork
+extension Action {
+  public static func fork<Input, Output: Error>(
+    to action: @escaping (Input) async -> Result<Output, Output>,
+    when condition: @escaping (Input) -> Bool
+  ) -> (Input) async -> Result<Input, Output> {
+    { input in
+      if condition(input) {
+        let res = await action(input)
+        return .failure(res.either())
+      }
+      return .success(input)
+    }
+  }
+
+  public static func fork<Input, Output: Error>(
+    to action: @escaping (Input) async -> Result<Output, Output>,
+    unless condition: @escaping (Input) -> Bool
+  ) -> (Input) async -> Result<Input, Output> {
+    { input in
+      if !condition(input) {
+        let res = await action(input)
+        return .failure(res.either())
+      }
+      return .success(input)
+    }
+  }
+}
+
 // MARK: - Unwrap
 extension Action {
   static func unwrap<Input, Failure: Error>(
