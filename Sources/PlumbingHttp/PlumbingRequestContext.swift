@@ -1,3 +1,5 @@
+import Foundation
+
 import protocol Hummingbird.BaseRequestContext
 import struct Hummingbird.CoreRequestContext
 import protocol Hummingbird.RequestContext
@@ -9,11 +11,7 @@ import struct Logging.Logger
 import protocol NIOCore.Channel
 
 #if canImport(FoundationNetworking)
-  import class FoundationNetworking.JSONDecoder
-  import class FoundationNetworking.JSONEncoder
-#else
-  import class Foundation.JSONDecoder
-  import class Foundation.JSONEncoder
+  import FoundationNetworking
 #endif
 
 public struct PlumbingRequestContext: RequestContext {

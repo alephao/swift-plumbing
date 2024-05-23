@@ -1,3 +1,4 @@
+import Foundation
 import Plumbing
 
 import protocol Hummingbird.HTTPResponder
@@ -6,8 +7,6 @@ import struct HummingbirdCore.Response
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking
-#else
-  import Foundation
 #endif
 
 public struct PlumbingResponderBuilder: HTTPResponderBuilder {
