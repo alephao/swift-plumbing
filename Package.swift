@@ -5,14 +5,13 @@ import PackageDescription
 let package = Package(
   name: "swift-plumbing",
   platforms: [
-    .macOS(.v14),
-    .iOS(.v15),
+    .macOS(.v14)
   ],
   products: [
     .executable(name: "plumb", targets: ["Plumb"]),
-    .library(name: "Plumbing", targets: ["Plumbing"]),
-    .library(name: "PlumbingHttp", targets: ["PlumbingHttp"]),
-    .library(name: "PlumbingHttpRouter", targets: ["PlumbingHttpRouter"]),
+    .library("Plumbing"),
+    .library("PlumbingHttp"),
+    .library("PlumbingHttpRouter"),
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
@@ -44,3 +43,9 @@ let package = Package(
     ),
   ]
 )
+
+extension Product {
+  static func library(_ name: String) -> Product {
+    .library(name: name, targets: [name])
+  }
+}
