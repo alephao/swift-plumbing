@@ -19,6 +19,7 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-beta.5"),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.6.0"),
+    .package(url: "https://github.com/pointfreeco/swift-prelude.git", revision: "da5ead2"),
   ],
   targets: [
     .executableTarget(
@@ -27,7 +28,12 @@ let package = Package(
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ]
     ),
-    .target(name: "Plumbing"),
+    .target(
+      name: "Plumbing",
+      dependencies: [
+        .product(name: "Tuple", package: "swift-prelude")
+      ]
+    ),
     .target(
       name: "PlumbingHttp",
       dependencies: [
