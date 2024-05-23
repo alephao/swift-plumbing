@@ -1,9 +1,6 @@
 import Foundation
+import Hummingbird
 import Plumbing
-
-import protocol Hummingbird.HTTPResponder
-import protocol Hummingbird.HTTPResponderBuilder
-import struct HummingbirdCore.Response
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking

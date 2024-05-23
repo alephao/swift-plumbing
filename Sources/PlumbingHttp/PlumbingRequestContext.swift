@@ -1,14 +1,7 @@
 import Foundation
-
-import protocol Hummingbird.BaseRequestContext
-import struct Hummingbird.CoreRequestContext
-import protocol Hummingbird.RequestContext
-import protocol Hummingbird.RequestDecoder
-import protocol Hummingbird.ResponseEncoder
-import struct Hummingbird.URLEncodedFormDecoder
-import struct Hummingbird.URLEncodedFormEncoder
-import struct Logging.Logger
-import protocol NIOCore.Channel
+import Hummingbird
+import Logging
+import NIOCore
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking

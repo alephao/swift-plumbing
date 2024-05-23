@@ -1,3 +1,3 @@
-import struct HummingbirdCore.Response
+import HummingbirdCore
 
 extension Response: Error {}

@@ -1,6 +1,5 @@
 import Foundation
-
-import struct Logging.Logger
+import Logging
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking
