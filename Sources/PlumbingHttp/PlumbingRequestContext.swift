@@ -3,6 +3,14 @@ import Hummingbird
 import Logging
 import NIO
 
+#if canImport(FoundationNetworking)
+  import class FoundationNetworking.JSONDecoder
+  import class FoundationNetworking.JSONEncoder
+#else
+  import class Foundation.JSONDecoder
+  import class Foundation.JSONEncoder
+#endif
+
 public struct PlumbingRequestContext: RequestContext {
   public var coreContext: CoreRequestContext
 
