@@ -1,5 +1,6 @@
-import Hummingbird
 import Plumbing
+
+import struct HummingbirdCore.Response
 
 extension Action {
   public static func decodeBody<Input, Output, T: Decodable>(

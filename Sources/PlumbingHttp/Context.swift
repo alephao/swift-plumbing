@@ -1,5 +1,5 @@
-import Hummingbird
-import Logging
+import struct HummingbirdCore.Request
+import struct Logging.Logger
 
 public struct Context {
   public let req: Request

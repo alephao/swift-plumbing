@@ -1,9 +1,13 @@
-import Foundation
-import Hummingbird
-import Logging
+import struct Logging.Logger
 
 #if canImport(FoundationNetworking)
-  import FoundationNetworking
+  import struct FoundationNetworking.UUID
+  import struct FoundationNetworking.Date
+  import typealias FoundationNetworking.TimeInterval
+#else
+  import struct Foundation.UUID
+  import struct Foundation.Date
+  import typealias Foundation.TimeInterval
 #endif
 
 public func loggerMiddleware(logger: Logger) -> PlumbingHTTPMiddleware {

@@ -30,7 +30,8 @@ let package = Package(
     .target(
       name: "PlumbingHttp",
       dependencies: [
-        .product(name: "Hummingbird", package: "hummingbird")
+        .product(name: "Hummingbird", package: "hummingbird"),
+        .product(name: "HummingbirdCore", package: "hummingbird"),
       ]
     ),
     .target(

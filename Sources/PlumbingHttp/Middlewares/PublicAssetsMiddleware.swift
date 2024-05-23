@@ -1,5 +1,8 @@
-import Hummingbird
 import Plumbing
+
+import struct Hummingbird.LocalFileSystem
+import struct Hummingbird.MediaType
+import struct HummingbirdCore.Response
 
 public func publicAssetsMiddleware(
   localFileSystem: LocalFileSystem,
