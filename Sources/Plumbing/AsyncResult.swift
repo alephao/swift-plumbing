@@ -1,3 +1,5 @@
+import Prelude
+
 public struct AsyncResult<Success, Failure: Error> {
   public var run: () async -> Result<Success, Failure>
 

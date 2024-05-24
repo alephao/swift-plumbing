@@ -31,7 +31,8 @@ let package = Package(
     .target(
       name: "Plumbing",
       dependencies: [
-        .product(name: "Tuple", package: "swift-prelude")
+        .product(name: "Prelude", package: "swift-prelude"),
+        .product(name: "Tuple", package: "swift-prelude"),
       ]
     ),
     .target(

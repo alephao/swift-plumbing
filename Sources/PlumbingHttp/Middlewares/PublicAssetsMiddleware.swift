@@ -16,79 +16,76 @@ public func publicAssetsMiddleware(
 
       let fullPath = localFileSystem.getFullPath(assetPath)
 
-      let res =
-        await fullPath
-        |> Action.run(
-          getFileAttributes(localFileSystem),
-          map: .*.,
-          mapError: discardRight
-        )
-        >=> Action.run(
-          loadFile(localFileSystem),
-          map: discardRight,
-          mapError: discardRight
-        )
+      let res = await AsyncResult.success(fullPath)
+        .prepend(getFileAttributes(localFileSystem))
+        .flatMap(loadFile(localFileSystem))
+        .run()
 
       return res.either()
     }
   }
 }
 
-private func getFileAttributes(_ fs: LocalFileSystem) -> (String) async -> Result<
-  LocalFileSystem.FileAttributes, Response
-> {
+private func getFileAttributes(
+  _ fs: LocalFileSystem
+) -> (String) -> AsyncResult<LocalFileSystem.FileAttributes, Response> {
   { path in
-    do {
-      guard
-        let attributes = try await fs.getAttributes(path: path),
-        !attributes.isFolder
-      else {
+    .init {
+      do {
+        guard
+          let attributes = try await fs.getAttributes(path: path),
+          !attributes.isFolder
+        else {
+          return .failure(.init(status: .notFound))
+        }
+        return .success(attributes)
+      } catch {
+        Ctx.logger.warning(
+          "publicAssetsMiddleware: failed to LocalFileSystem.getAttributes: \(String(reflecting: error))"
+        )
         return .failure(.init(status: .notFound))
       }
-      return .success(attributes)
-    } catch {
-      Ctx.logger.warning(
-        "publicAssetsMiddleware: failed to LocalFileSystem.getAttributes: \(String(reflecting: error))"
-      )
-      return .failure(.init(status: .notFound))
     }
   }
 }
 
-private func loadFile(_ fs: LocalFileSystem) -> (T2<LocalFileSystem.FileAttributes, String>) async
-  -> Result<Response, Response>
+private func loadFile(_ fs: LocalFileSystem)
+  -> (T2<LocalFileSystem.FileAttributes, String>)
+  -> AsyncResult<Response, Response>
 {
   { t in
-    let attributes = get1(t)
-    let path = rest(t)
-    do {
-      let body = try await fs.loadFile(path: path, context: Ctx.ctx)
+    .init {
+      let attributes = get1(t)
+      let path = rest(t)
+      do {
+        let body = try await fs.loadFile(path: path, context: Ctx.ctx)
 
-      var headers: HTTPFields = [
-        .contentLength: String(describing: attributes.size)
-      ]
+        var headers: HTTPFields = [
+          .contentLength: String(describing: attributes.size)
+        ]
 
-      if let extPointIndex = path.lastIndex(of: ".") {
-        let extIndex = path.index(after: extPointIndex)
-        let ext = String(path.suffix(from: extIndex))
-        if let contentType = MediaType.getMediaType(forExtension: ext) {
-          headers[.contentType] = contentType.description
-          // TODO: Maybe make this configurable
-          headers[.cacheControl] = cacheControl(for: contentType)
+        if let extPointIndex = path.lastIndex(of: ".") {
+          let extIndex = path.index(after: extPointIndex)
+          let ext = String(path.suffix(from: extIndex))
+          if let contentType = MediaType.getMediaType(forExtension: ext) {
+            headers[.contentType] = contentType.description
+            // TODO: Maybe make this configurable
+            headers[.cacheControl] = cacheControl(for: contentType)
+          }
         }
-      }
 
-      let res = Response(
-        status: .ok,
-        headers: headers,
-        body: body
-      )
-      return .success(res)
-    } catch {
-      Ctx.logger.warning(
-        "publicAssetsMiddleware: failed to LocalFileSystem.loadFile: \(String(reflecting: error))"
-      )
-      return .failure(.init(status: .notFound))
+        let res = Response(
+          status: .ok,
+          headers: headers,
+          body: body
+        )
+        return .success(res)
+      } catch {
+        Ctx.logger.warning(
+          "publicAssetsMiddleware: failed to LocalFileSystem.loadFile: \(String(reflecting: error))"
+        )
+        return .failure(.init(status: .notFound))
+      }
     }
   }
 }

@@ -26,7 +26,7 @@ extension AsyncResult {
   /// Optionally run a transformation returning the same Success/Failure types
   ///
   ///  <true>  ┏━━[mA]━━┓
-  /// ━━[A]━━━━┦        ┞━[A]━▶
+  /// ━━[A]━━━━┦        ┞━[A]━━▶
   ///  <false> └┄┄[A]┄┄┄┘
   public func middleware(
     run other: @escaping (Success) -> AsyncResult<Success, Failure>,
@@ -41,7 +41,22 @@ extension AsyncResult {
   }
 }
 
-// Fork/Switch
+// MARK: Prepend
+extension AsyncResult {
+  /// Run other and prepend the result
+  ///
+  /// -      ┏━━[B]━━┓
+  /// ━━[A]━━┻━━━━━━━┻━━[(B,A)]━━▶
+  public func prepend<OtherSuccess>(
+    _ other: @escaping (Success) -> AsyncResult<OtherSuccess, Failure>
+  ) -> AsyncResult<T2<OtherSuccess, Success>, Failure> {
+    self.flatMap({ success in
+      other(success).map({ otherSuccess in otherSuccess .*. success })
+    })
+  }
+}
+
+// MARK: Fork/Switch
 extension AsyncResult {
   /// Use a predicate to decide which transformation to use
   ///
