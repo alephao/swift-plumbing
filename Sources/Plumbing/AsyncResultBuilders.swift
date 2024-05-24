@@ -13,7 +13,7 @@ import Tuple
 // ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋
 // ▶
 
-// MARK: Endo - Middleware, Ensure
+// MARK: Endo - Middleware, Ensure, Effects
 extension AsyncResult {
   /// Run a transformation returning the same Success/Failure types
   ///
@@ -50,6 +50,36 @@ extension AsyncResult {
     orFail fail: @escaping (Success) -> Failure
   ) -> Self {
     middleware(run: fail >>> Self.failure, if: not <<< predicate)
+  }
+
+  /// Run a non-failable effect and wait for it to finish
+  ///
+  ///-      ┏━[task]━┓
+  /// ━[A]━━┻╍╍╍╍╍╍╍╍┻━━[A]━━▶
+  public func runAndWait(
+    _ task: @escaping (Success) async -> Void
+  ) -> Self {
+    self.flatMap({ success in
+      .init {
+        await task(success)
+        return .success(success)
+      }
+    })
+  }
+
+  /// Fire an effect and forget about it
+  ///
+  ///-      ┏╍╍[task]╍╍▶
+  /// ━[A]━━┻━━[A]━━━━━▶
+  public func fireAndForget(
+    _ task: @escaping (Success) async -> Void
+  ) -> Self {
+    self.flatMap({ success in
+      .init {
+        await task(success)
+        return .success(success)
+      }
+    })
   }
 }
 
