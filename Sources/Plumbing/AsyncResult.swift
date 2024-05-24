@@ -80,6 +80,20 @@ public struct AsyncResult<Success, Failure: Error> {
   }
 }
 
+extension AsyncResult {
+  public static func wrapFunc<Input>(
+    _ f: @escaping (Input) async -> Result<Success, Failure>
+  ) -> (Input)
+    -> AsyncResult<Success, Failure>
+  {
+    { input in
+      .init {
+        await f(input)
+      }
+    }
+  }
+}
+
 public func <|> <A, F: Error>(
   _ a: AsyncResult<A, F>,
   _ b: AsyncResult<A, F>
