@@ -134,6 +134,7 @@ extension AsyncResult {
   }
 }
 
+// MARK: Parallel
 extension AsyncResult {
   /// Run a and b in parallel
   ///

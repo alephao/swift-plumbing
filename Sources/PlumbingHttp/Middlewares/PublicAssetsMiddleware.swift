@@ -16,7 +16,7 @@ public func publicAssetsMiddleware(
 
       let fullPath = localFileSystem.getFullPath(assetPath)
 
-      let res = await AsyncResult.success(fullPath)
+      let res = await AsyncResult<String, Response>.success(fullPath)
         .prepend(getFileAttributes(localFileSystem))
         .flatMap(loadFile(localFileSystem))
         .run()
