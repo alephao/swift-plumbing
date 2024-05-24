@@ -1,3 +1,4 @@
+import Prelude
 import Tuple
 
 // ╎ ╏ ┆ ┇ ┊ ┋ │ ┃ ╽ ╿
@@ -12,7 +13,7 @@ import Tuple
 // ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋
 // ▶
 
-// MARK: Middleware
+// MARK: Endo - Middleware, Ensure
 extension AsyncResult {
   /// Run a transformation returning the same Success/Failure types
   ///
@@ -38,6 +39,17 @@ extension AsyncResult {
       }
       return .success(success)
     })
+  }
+
+  /// Fail with the provided closure if the predicate is not true
+  ///
+  /// ━━[A]━━┯━━[A]━━▶
+  ///<false> └┄┄X
+  public func ensure(
+    _ predicate: @escaping (Success) -> Bool,
+    orFail fail: @escaping (Success) -> Failure
+  ) -> Self {
+    middleware(run: fail >>> Self.failure, if: not <<< predicate)
   }
 }
 
