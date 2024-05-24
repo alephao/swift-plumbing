@@ -19,7 +19,7 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-beta.5"),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.6.0"),
-    .package(url: "https://github.com/pointfreeco/swift-prelude.git", revision: "da5ead2"),
+    .package(url: "https://github.com/alephao/swift-prelude.git", from: "0.7.0"),
   ],
   targets: [
     .executableTarget(

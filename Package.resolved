@@ -1,5 +1,5 @@
 {
-  "originHash" : "624a1cb084a4293e967473d00f8c7fbab310d872275141729d5d5cd5c0829d99",
+  "originHash" : "81fbbcfafd1d18ff2ea4a6bd80de825964301f889ef70f4e1c0234eed085a5c0",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -211,10 +211,10 @@
     {
       "identity" : "swift-prelude",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-prelude.git",
+      "location" : "https://github.com/alephao/swift-prelude.git",
       "state" : {
-        "branch" : "da5ead2",
-        "revision" : "da5ead261fbfa57b9d0e993e9f9405c1734a1a1c"
+        "revision" : "da5ead261fbfa57b9d0e993e9f9405c1734a1a1c",
+        "version" : "0.7.0"
       }
     },
     {
