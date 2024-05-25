@@ -1,3 +1,4 @@
+import Dependencies
 import Prelude
 import Tuple
 
@@ -76,7 +77,10 @@ extension AsyncResult {
   ) -> Self {
     self.flatMap({ success in
       .init {
-        await task(success)
+        @Dependency(\.fireAndForget) var fnf
+        await fnf {
+          await task(success)
+        }
         return .success(success)
       }
     })

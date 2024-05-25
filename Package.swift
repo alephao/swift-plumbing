@@ -20,6 +20,7 @@ let package = Package(
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-beta.5"),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.6.0"),
     .package(url: "https://github.com/alephao/swift-prelude.git", from: "0.7.0"),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
   ],
   targets: [
     .executableTarget(
@@ -33,6 +34,7 @@ let package = Package(
       dependencies: [
         .product(name: "Prelude", package: "swift-prelude"),
         .product(name: "Tuple", package: "swift-prelude"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
       ]
     ),
     .target(
