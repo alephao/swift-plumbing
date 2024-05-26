@@ -66,6 +66,17 @@ public func prepend<Success, Failure, OtherSuccess>(
   { r in r.prepend(other) }
 }
 
+/// Run other and prepend the result if the value is not nil
+///
+/// -      ┏━[B?]━┱┄<nil>┄X
+/// ━━[A]━━┻━━━━━━┻━[(B,A)]━━▶
+public func prepend<Success, Failure, OtherSuccess>(
+  _ other: @escaping (Success) -> AsyncResult<OtherSuccess?, Failure>,
+  orFail: @escaping (Success) -> Failure
+) -> (AsyncResult<Success, Failure>) -> AsyncResult<T2<OtherSuccess, Success>, Failure> {
+  { r in r.prepend(other, orFail: orFail) }
+}
+
 // MARK: Fork/Switch
 /// Use a predicate to decide which transformation to use
 ///

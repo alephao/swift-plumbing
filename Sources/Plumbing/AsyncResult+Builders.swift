@@ -100,6 +100,27 @@ extension AsyncResult {
       other(success).map({ otherSuccess in otherSuccess .*. success })
     })
   }
+
+  /// Run other and prepend the result if the value is not nil
+  ///
+  /// -      ┏━[B?]━┱┄<nil>┄X
+  /// ━━[A]━━┻━━━━━━┻━[(B,A)]━━▶
+  public func prepend<OtherSuccess>(
+    _ other: @escaping (Success) -> AsyncResult<OtherSuccess?, Failure>,
+    orFail: @escaping (Success) -> Failure
+  ) -> AsyncResult<T2<OtherSuccess, Success>, Failure> {
+    self.flatMap({ success in
+      other(success)
+        .flatMap({ otherSuccess in
+          switch otherSuccess {
+          case .none:
+            return .failure(orFail(success))
+          case let .some(otherSuccessUnwrapped):
+            return .success(otherSuccessUnwrapped .*. success)
+          }
+        })
+    })
+  }
 }
 
 // MARK: Fork/Switch
