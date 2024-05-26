@@ -94,6 +94,15 @@ extension AsyncResult {
   }
 }
 
+extension AsyncResult {
+  public static func <¢> <NewSuccess>(
+    f: @escaping (Success) -> NewSuccess,
+    x: AsyncResult<Success, Failure>
+  ) -> AsyncResult<NewSuccess, Failure> {
+    return x.map(f)
+  }
+}
+
 extension AsyncResult: Alt {
   public static func <|> (
     lhs: AsyncResult,
@@ -101,6 +110,12 @@ extension AsyncResult: Alt {
   ) -> AsyncResult {
     lhs.or(rhs())
   }
+}
+
+public func map<Success, NewSuccess, Failure: Error>(
+  _ transform: @escaping (Success) -> NewSuccess
+) -> (AsyncResult<Success, Failure>) -> AsyncResult<NewSuccess, Failure> {
+  { a in a.map(transform) }
 }
 
 public func flatMap<A, B, F: Error>(
