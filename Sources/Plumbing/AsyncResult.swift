@@ -94,11 +94,19 @@ extension AsyncResult {
   }
 }
 
-public func <|> <A, F: Error>(
-  _ a: AsyncResult<A, F>,
-  _ b: AsyncResult<A, F>
-) -> AsyncResult<A, F> {
-  a.or(b)
+extension AsyncResult: Alt {
+  public static func <|> (
+    lhs: AsyncResult,
+    rhs: @autoclosure @escaping () -> AsyncResult
+  ) -> AsyncResult {
+    lhs.or(rhs())
+  }
+}
+
+public func flatMap<A, B, F: Error>(
+  _ transform: @escaping (A) -> AsyncResult<B, F>
+) -> (AsyncResult<A, F>) -> AsyncResult<B, F> {
+  { a in a.flatMap(transform) }
 }
 
 public func >>= <A, B, F: Error>(
