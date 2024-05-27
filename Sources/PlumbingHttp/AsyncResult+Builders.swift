@@ -6,33 +6,13 @@ extension AsyncResult {
     as decodable: A.Type,
     onError: @escaping (T2<any Error, Success>) -> AsyncResult<T2<A, Success>, Failure>
   ) -> AsyncResult<T2<A, Success>, Failure> {
-    self.flatMap({ success in
-      .init {
-        do {
-          let a = try await Ctx.req.decode(as: A.self, context: Ctx.ctx)
-          return .success(a .*. success)
-        } catch {
-          Ctx.logger.debug("[Error] decodeBody: \(String(reflecting: error))")
-          return await onError(error .*. success).run()
-        }
-      }
-    })
+    self.flatMap(Bind.decodeBody(as: decodable, onError: onError))
   }
 
   public func decodeBody<A: Decodable>(
     as decodable: A.Type,
     orFail fail: @escaping (Success) -> Failure
   ) -> AsyncResult<T2<A, Success>, Failure> {
-    self.flatMap({ success in
-      .init {
-        do {
-          let a = try await Ctx.req.decode(as: A.self, context: Ctx.ctx)
-          return .success(a .*. success)
-        } catch {
-          Ctx.logger.debug("[Error] decodeBody: \(String(reflecting: error))")
-          return .failure(fail(success))
-        }
-      }
-    })
+    self.flatMap(Bind.decodeBody(as: decodable, orFail: fail))
   }
 }
