@@ -21,7 +21,7 @@ extension AsyncResult {
 
   public func decodeBody<A: Decodable>(
     as decodable: A.Type,
-    orFail: @escaping (Success) -> Failure
+    orFail fail: @escaping (Success) -> Failure
   ) -> AsyncResult<T2<A, Success>, Failure> {
     self.flatMap({ success in
       .init {
@@ -30,7 +30,7 @@ extension AsyncResult {
           return .success(a .*. success)
         } catch {
           Ctx.logger.debug("[Error] decodeBody: \(String(reflecting: error))")
-          return .failure(orFail(success))
+          return .failure(fail(success))
         }
       }
     })
