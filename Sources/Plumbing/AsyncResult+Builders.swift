@@ -14,6 +14,13 @@ import Tuple
 // ┽ ┾ ┿ ╀ ╁ ╂ ╃ ╄ ╅ ╆ ╇ ╈ ╉ ╊ ╋
 // ▶
 
+// API Notes
+//
+// Try using same argument name in functions
+// - or other: closure that returns the same type as the function return type
+// - orUse use: closure that returns the success type
+// - orFail fail: closure that returns the error type
+
 // MARK: Endo - Middleware, Ensure, Effects
 extension AsyncResult {
   /// Run a transformation returning the same Success/Failure types
@@ -107,14 +114,14 @@ extension AsyncResult {
   /// ━━[A]━━┻━━━━━━┻━[(B,A)]━━▶
   public func prepend<OtherSuccess>(
     _ other: @escaping (Success) -> AsyncResult<OtherSuccess?, Failure>,
-    orFail: @escaping (Success) -> Failure
+    orFail fail: @escaping (Success) -> Failure
   ) -> AsyncResult<T2<OtherSuccess, Success>, Failure> {
     self.flatMap({ success in
       other(success)
         .flatMap({ otherSuccess in
           switch otherSuccess {
           case .none:
-            return .failure(orFail(success))
+            return .failure(fail(success))
           case let .some(otherSuccessUnwrapped):
             return .success(otherSuccessUnwrapped .*. success)
           }
@@ -173,13 +180,13 @@ extension AsyncResult {
   ///     <nil>
   ///       X
   public func unwrap<Wrapped>(
-    orFail other: @escaping () -> Failure
+    orFail fail: @escaping () -> Failure
   ) -> AsyncResult<Wrapped, Failure> where Success == Wrapped? {
     self.flatMap({ wrapped in
       if let unwrapped = wrapped {
         return .success(unwrapped)
       }
-      return .failure(other())
+      return .failure(fail())
     })
   }
 
@@ -197,6 +204,22 @@ extension AsyncResult {
         return .success(unwrapped)
       }
       return other()
+    })
+  }
+
+  /// Unwraps an optional property or fails with the provided closure
+  ///
+  /// -    ┏━[B?]━┱┄<nil>┄X
+  /// ━[A]━┻━━━━━━┻━[B,A]━━▶
+  public func unwrap<Property>(
+    property: @escaping (Success) -> Property?,
+    orFail fail: @escaping (Success) -> Failure
+  ) -> AsyncResult<T2<Property, Success>, Failure> {
+    self.flatMap({ success in
+      if let unwrapped = property(success) {
+        return .success(unwrapped .*. success)
+      }
+      return .failure(fail(success))
     })
   }
 }

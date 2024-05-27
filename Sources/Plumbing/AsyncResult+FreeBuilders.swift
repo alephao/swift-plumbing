@@ -72,9 +72,9 @@ public func prepend<Success, Failure, OtherSuccess>(
 /// ━━[A]━━┻━━━━━━┻━[(B,A)]━━▶
 public func prepend<Success, Failure, OtherSuccess>(
   _ other: @escaping (Success) -> AsyncResult<OtherSuccess?, Failure>,
-  orFail: @escaping (Success) -> Failure
+  orFail fail: @escaping (Success) -> Failure
 ) -> (AsyncResult<Success, Failure>) -> AsyncResult<T2<OtherSuccess, Success>, Failure> {
-  { r in r.prepend(other, orFail: orFail) }
+  { r in r.prepend(other, orFail: fail) }
 }
 
 // MARK: Fork/Switch
@@ -113,9 +113,9 @@ public func `switch`<Success>(
 ///     <nil>
 ///       X
 public func unwrap<Wrapped, Failure>(
-  orFail other: @escaping () -> Failure
+  orFail fail: @escaping () -> Failure
 ) -> (AsyncResult<Wrapped?, Failure>) -> AsyncResult<Wrapped, Failure> {
-  { r in r.unwrap(orFail: other) }
+  { r in r.unwrap(orFail: fail) }
 }
 
 /// Unwraps an optional or run a pipeline that returns an unwrapped value
@@ -128,6 +128,17 @@ public func unwrap<Wrapped, Failure>(
   or other: @escaping () -> AsyncResult<Wrapped, Failure>
 ) -> (AsyncResult<Wrapped?, Failure>) -> AsyncResult<Wrapped, Failure> {
   { r in r.unwrap(or: other) }
+}
+
+/// Unwraps an optional property or fails with the provided closure
+///
+/// -    ┏━[B?]━┱┄<nil>┄X
+/// ━[A]━┻━━━━━━┻━[B,A]━━▶
+public func unwrap<Success, Failure, Property>(
+  property: @escaping (Success) -> Property?,
+  orFail fail: @escaping (Success) -> Failure
+) -> (AsyncResult<Success, Failure>) -> AsyncResult<T2<Property, Success>, Failure> {
+  { r in r.unwrap(property: property, orFail: fail) }
 }
 
 // MARK: Parallel
