@@ -2,6 +2,25 @@ import Dependencies
 import Prelude
 
 public enum Bind {
+  @available(*, deprecated, message: "do not use satisfyTypes in production")
+  public func satisfyTypes<
+    Success,
+    ExpectedSuccess,
+    ExpectedFailure
+  >() -> (Success) -> AsyncResult<
+    ExpectedSuccess, ExpectedFailure
+  > {
+    fatalError("satisfyTypes")
+  }
+
+  public static func middleware<Success, Failure>(
+    run other: @escaping (Success) -> AsyncResult<Success, Failure>
+  ) -> (Success) -> AsyncResult<Success, Failure> {
+    { success in
+      return other(success)
+    }
+  }
+
   public static func middleware<Success, Failure>(
     run other: @escaping (Success) -> AsyncResult<Success, Failure>,
     if predicate: @escaping (Success) -> Bool
@@ -129,6 +148,19 @@ public enum Bind {
         return .success(unwrapped .*. success)
       }
       return .failure(fail(success))
+    }
+  }
+
+  public static func unwrapFork<Success, Failure, Property, NewSuccess>(
+    property: @escaping (Success) -> Property?,
+    some: @escaping (T2<Property, Success>) -> AsyncResult<NewSuccess, Failure>,
+    none: @escaping (Success) -> AsyncResult<NewSuccess, Failure>
+  ) -> (Success) -> AsyncResult<NewSuccess, Failure> {
+    { success in
+      if let unwrapped = property(success) {
+        return some(unwrapped .*. success)
+      }
+      return none(success)
     }
   }
 

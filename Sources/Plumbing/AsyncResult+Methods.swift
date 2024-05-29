@@ -23,6 +23,14 @@ import Tuple
 
 // MARK: Endo - Middleware, Ensure, Effects
 extension AsyncResult {
+  @available(*, deprecated, message: "do not use satisfyTypes in production")
+  public func satisfyTypes<
+    ExpectedSuccess,
+    ExpectedFailure
+  >() -> AsyncResult<ExpectedSuccess, ExpectedFailure> {
+    fatalError("satisfyTypes")
+  }
+
   /// Run a transformation returning the same Success/Failure types
   ///
   /// ━[A]━━[mA]━━[A]━━▶
@@ -164,6 +172,17 @@ extension AsyncResult {
     orFail fail: @escaping (Success) -> Failure
   ) -> AsyncResult<T2<Property, Success>, Failure> {
     self.flatMap(Bind.unwrap(property: property, orFail: fail))
+  }
+
+  /// Run a closure depending if the property was successfuly uwrapped
+  ///
+  /// TODO: Drawing
+  public func unwrapFork<Property, NewSuccess>(
+    property: @escaping (Success) -> Property?,
+    some: @escaping (T2<Property, Success>) -> AsyncResult<NewSuccess, Failure>,
+    none: @escaping (Success) -> AsyncResult<NewSuccess, Failure>
+  ) -> AsyncResult<NewSuccess, Failure> {
+    self.flatMap(Bind.unwrapFork(property: property, some: some, none: none))
   }
 }
 

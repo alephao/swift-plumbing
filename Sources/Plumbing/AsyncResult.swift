@@ -7,6 +7,17 @@ public struct AsyncResult<Success, Failure: Error> {
     self.run = run
   }
 
+  public init(try f: @escaping () async throws -> Success) where Failure == any Error {
+    self.run = {
+      do {
+        let success = try await f()
+        return .success(success)
+      } catch {
+        return .failure(error)
+      }
+    }
+  }
+
   public init(result: Result<Success, Failure>) {
     self.run = { result }
   }
@@ -45,6 +56,13 @@ public struct AsyncResult<Success, Failure: Error> {
     }
   }
 
+  public func bimap<NewSuccess, NewFailure: Error>(
+    success _map: @escaping (Success) -> NewSuccess,
+    failure _mapError: @escaping (Failure) -> NewFailure
+  ) -> AsyncResult<NewSuccess, NewFailure> {
+    self.map(_map).mapError(_mapError)
+  }
+
   public func flatMap<NewSuccess>(
     _ transform: @escaping (Success) -> AsyncResult<NewSuccess, Failure>
   ) -> AsyncResult<NewSuccess, Failure> {
@@ -63,6 +81,18 @@ public struct AsyncResult<Success, Failure: Error> {
       switch await run() {
       case let .success(success): return .success(success)
       case let .failure(error): return await transform(error).run()
+      }
+    }
+  }
+
+  public func flatMap<NewSuccess, NewFailure: Error>(
+    success _flatMap: @escaping (Success) -> AsyncResult<NewSuccess, NewFailure>,
+    failure _flatMapError: @escaping (Failure) -> AsyncResult<NewSuccess, NewFailure>
+  ) -> AsyncResult<NewSuccess, NewFailure> {
+    .init {
+      switch await self.run() {
+      case .success(let success): return await _flatMap(success).run()
+      case .failure(let failure): return await _flatMapError(failure).run()
       }
     }
   }
@@ -118,10 +148,22 @@ public func map<Success, NewSuccess, Failure: Error>(
   { a in a.map(transform) }
 }
 
+public func mapError<Success, Failure: Error, NewFailure: Error>(
+  _ transform: @escaping (Failure) -> NewFailure
+) -> (AsyncResult<Success, Failure>) -> AsyncResult<Success, NewFailure> {
+  { a in a.mapError(transform) }
+}
+
 public func flatMap<A, B, F: Error>(
   _ transform: @escaping (A) -> AsyncResult<B, F>
 ) -> (AsyncResult<A, F>) -> AsyncResult<B, F> {
   { a in a.flatMap(transform) }
+}
+
+public func flatMapError<Success, Failure: Error, NewFailure: Error>(
+  _ transform: @escaping (Failure) -> AsyncResult<Success, NewFailure>
+) -> (AsyncResult<Success, Failure>) -> AsyncResult<Success, NewFailure> {
+  { a in a.flatMapError(transform) }
 }
 
 public func >>= <A, B, F: Error>(

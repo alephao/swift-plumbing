@@ -1,5 +1,15 @@
 import Tuple
 
+@available(*, deprecated, message: "do not use satisfyTypes in production")
+public func satisfyTypes<
+  Success,
+  Failure,
+  ExpectedSuccess,
+  ExpectedFailure
+>() -> (AsyncResult<Success, Failure>) -> AsyncResult<ExpectedSuccess, ExpectedFailure> {
+  { r in r.satisfyTypes() }
+}
+
 // MARK: Endo - Middleware, Ensure, Effects
 
 /// Run a transformation returning the same Success/Failure types
@@ -139,6 +149,17 @@ public func unwrap<Success, Failure, Property>(
   orFail fail: @escaping (Success) -> Failure
 ) -> (AsyncResult<Success, Failure>) -> AsyncResult<T2<Property, Success>, Failure> {
   { r in r.unwrap(property: property, orFail: fail) }
+}
+
+/// Run a closure depending if the property was successfuly uwrapped
+///
+/// TODO: Drawing
+public func unwrapFork<Success, Failure, Property, NewSuccess>(
+  property: @escaping (Success) -> Property?,
+  some: @escaping (T2<Property, Success>) -> AsyncResult<NewSuccess, Failure>,
+  none: @escaping (Success) -> AsyncResult<NewSuccess, Failure>
+) -> (AsyncResult<Success, Failure>) -> AsyncResult<NewSuccess, Failure> {
+  { r in r.unwrapFork(property: property, some: some, none: none) }
 }
 
 // MARK: Parallel
