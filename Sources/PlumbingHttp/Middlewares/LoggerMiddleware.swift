@@ -28,6 +28,7 @@ public func loggerMiddleware(logger: Logger) -> PlumbingHTTPMiddleware {
         \(requestID) \
         \(res.status.code) \
         in \(timeDiff) \
+        \(req.method) \
         \(req.uri.path)
         """
       )
