@@ -21,6 +21,7 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.6.0"),
     .package(url: "https://github.com/alephao/swift-prelude.git", from: "0.7.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
+    .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.0.0"),
   ],
   targets: [
     .executableTarget(
@@ -44,6 +45,8 @@ let package = Package(
         .product(name: "HummingbirdCore", package: "hummingbird"),
         .product(name: "Logging", package: "swift-log"),
         .product(name: "NIOCore", package: "swift-nio"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "ServiceLifecycle", package: "swift-service-lifecycle"),
       ]
     ),
     .target(

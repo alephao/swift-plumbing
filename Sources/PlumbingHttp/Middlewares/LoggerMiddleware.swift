@@ -1,3 +1,4 @@
+import Dependencies
 import Foundation
 import Logging
 
@@ -8,18 +9,14 @@ import Logging
 public func loggerMiddleware(logger: Logger) -> PlumbingHTTPMiddleware {
   { next in
     {
-      let req = Ctx.req
+      @Dependency(\.req) var req
+      @Dependency(\.uuid) var uuid
+      @Dependency(\.date) var date
 
-      // FIXME: Make UUID and Date mockable
-      let requestID = UUID()
-      let startTime = Date().timeIntervalSince1970
-      // FIXME: Trying a single log entry instead of 1 req + 1 res log
-      // This can cause some issues, like if the task never ends, we will never
-      // know it started in the first place.
-      // So I guess we gotta figure out how to cancel this on timeout and log that it timmed out.
-      // Maybe we can just use a Task, but I will check later
+      let requestID = uuid()
+      let startTime = date().timeIntervalSince1970
       let res = await next()
-      let endTime = Date().timeIntervalSince1970
+      let endTime = date().timeIntervalSince1970
       let timeDiff = formatSecondsToDisplay(endTime - startTime)
 
       logger.log(

@@ -1,3 +1,4 @@
+import Dependencies
 import Foundation
 import Hummingbird
 import Plumbing
@@ -31,9 +32,11 @@ public struct PlumbingResponder: HTTPResponder {
     to request: Request,
     context: PlumbingRequestContext
   ) async -> Response {
-    let ctx = PlumbingHttp.Context(req: request, ctx: context, logger: context.logger)
-    return await PlumbingHttp.Context.$value.withValue(ctx) {
-      await handler()
+    return await withDependencies { deps in
+      deps.req = request
+      deps.ctx = context
+    } operation: {
+      return await handler()
     }
   }
 }
