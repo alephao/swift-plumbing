@@ -23,7 +23,7 @@ public func buildApplication(
   port: Int = 8080,
   services: [any Service] = [],
   handler: @escaping PlumbingHTTPHandler
-) -> any Application {
+) -> some ApplicationProtocol {
   @Dependency(\.logger) var logger
   let router = PlumbingResponderBuilder(handler: handler)
 
