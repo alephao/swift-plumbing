@@ -9,6 +9,21 @@ public func startServer(
   services: [any Service] = [],
   handler: @escaping PlumbingHTTPHandler
 ) async throws {
+  let app = buildApplication(
+    host: host,
+    port: port,
+    services: services,
+    handler: handler
+  )
+  try await app.runService()
+}
+
+public func buildApplication(
+  host: String = "127.0.0.1",
+  port: Int = 8080,
+  services: [any Service] = [],
+  handler: @escaping PlumbingHTTPHandler
+) -> any Application {
   @Dependency(\.logger) var logger
   let router = PlumbingResponderBuilder(handler: handler)
 
@@ -20,5 +35,5 @@ public func startServer(
   for service in app.services {
     app.addServices(service)
   }
-  try await app.run()
+  return app
 }
