@@ -8,26 +8,45 @@ let package = Package(
     .macOS(.v14)
   ],
   products: [
-    .executable(name: "plumb", targets: ["Plumb"]),
+    .executable("plumb"),
+    .plugin("AssetsCodegenPlugin"),
     .library("Plumbing"),
     .library("PlumbingHttp"),
-    .library("PlumbingHttpRouter"),
+    .library("PlumbingHummingbird"),
+    // Middlewares
+    .library("LoggerMiddleware"),
+    .library("PublicAssetsMiddleware"),
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0"),
+    .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
     .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-beta.5"),
-    .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.6.0"),
     .package(url: "https://github.com/alephao/swift-prelude.git", from: "0.7.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
     .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.0.0"),
   ],
   targets: [
     .executableTarget(
-      name: "Plumb",
+      name: "plumb",
       dependencies: [
-        .product(name: "ArgumentParser", package: "swift-argument-parser")
+        "PlumbAssetsCodegen",
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        .product(name: "Crypto", package: "swift-crypto"),
+      ]
+    ),
+    .target(
+      name: "PlumbAssetsCodegen",
+      dependencies: [
+        .product(name: "Crypto", package: "swift-crypto")
+      ]
+    ),
+    .plugin(
+      name: "AssetsCodegenPlugin",
+      capability: .buildTool(),
+      dependencies: [
+        "plumb"
       ]
     ),
     .target(
@@ -50,18 +69,45 @@ let package = Package(
       ]
     ),
     .target(
-      name: "PlumbingHttpRouter",
+      name: "PlumbingHummingbird",
       dependencies: [
-        "PlumbingHttp",
         .product(name: "Hummingbird", package: "hummingbird"),
-        .product(name: "URLRouting", package: "swift-url-routing"),
+        .product(name: "HummingbirdCore", package: "hummingbird"),
+        .product(name: "Logging", package: "swift-log"),
+        .product(name: "NIOCore", package: "swift-nio"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
+      ]
+    ),
+    .target(
+      name: "LoggerMiddleware",
+      dependencies: [
+        "PlumbingHummingbird",
+        .product(name: "Logging", package: "swift-log"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
+      ]
+    ),
+    .target(
+      name: "PublicAssetsMiddleware",
+      dependencies: [
+        "Plumbing",
+        "PlumbingHummingbird",
+        .product(name: "Logging", package: "swift-log"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
       ]
     ),
   ]
 )
 
 extension Product {
+  static func executable(_ name: String) -> Product {
+    .executable(name: name, targets: [name])
+  }
+
   static func library(_ name: String) -> Product {
     .library(name: name, targets: [name])
+  }
+
+  static func plugin(_ name: String) -> Product {
+    .plugin(name: name, targets: [name])
   }
 }
