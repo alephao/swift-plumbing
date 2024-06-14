@@ -23,7 +23,16 @@ public func assetsCodegen(
   publicAssetsRootPath: String,
   checksum: Bool
 ) throws -> String {
-  let fileManager = FileManager()
+  let enumName = "PublicAsset"
+  let dictName = "publicAssetsMapping"
+  let emptyFile = """
+  extension \(enumName) { }
+
+  public let \(dictName): [String: String] = [:]
+
+  """
+
+  let fileManager = FileManager.default
 
   let files = try fileManager.ls(
     publicAssetsRootPath,
@@ -32,7 +41,7 @@ public func assetsCodegen(
   )
 
   if files.count == 0 {
-    return "// No assets found"
+    return emptyFile
   }
 
   let staticReferences = staticReferencesDeclr(
@@ -41,8 +50,10 @@ public func assetsCodegen(
     files: files,
     checksum: checksum
   )
-  let enumName = "PublicAsset"
-  let dictName = "publicAssetsMapping"
+
+  if staticReferences == "" {
+    return emptyFile
+  }
 
   let pathReferences =
     ("extension \(enumName) {") + "\n"

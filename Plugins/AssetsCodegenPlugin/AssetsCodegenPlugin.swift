@@ -1,6 +1,31 @@
 import PackagePlugin
 import Foundation
 
+//private let defaultIgnoreFiles: Set<String> = [".DS_Store", ".gitkeep"]
+//func getInputFiles(publicAssetsRootPath: String) -> [Path] {
+//  let rootURL = URL(filePath: publicAssetsRootPath)
+//  guard let inputFilesEnumerator = FileManager.default.enumerator(
+//    at: rootURL,
+//    includingPropertiesForKeys: [],
+//    options: [],
+//    errorHandler: nil
+//  ) else {
+//    return []
+//  }
+//
+//  let inputFiles = inputFilesEnumerator
+//    .compactMap({ element -> Path? in
+//      guard
+//        let url = element as? URL,
+//        !url.hasDirectoryPath,
+//        !defaultIgnoreFiles.contains(url.lastPathComponent)
+//      else { return nil }
+//      return Path(url.absoluteString)
+//    })
+//
+//  return inputFiles
+//}
+
 @main struct AssetsCodegenPlugin {}
 
 extension AssetsCodegenPlugin: BuildToolPlugin {
@@ -35,6 +60,8 @@ extension AssetsCodegenPlugin: BuildToolPlugin {
       args.append("--checksum")
     }
 
+//    let inputFiles = getInputFiles(publicAssetsRootPath: publicFilesPath.string)
+
     return [
       .buildCommand(
         displayName: """
@@ -46,7 +73,7 @@ extension AssetsCodegenPlugin: BuildToolPlugin {
         executable: plumb.path,
         arguments: args,
         environment: [:],
-        inputFiles: [ publicFilesPath ],
+//        inputFiles: inputFiles,
         outputFiles: [ outputFilePath ]
       )
     ]
