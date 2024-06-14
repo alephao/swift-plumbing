@@ -31,14 +31,10 @@ public func buildApplication() -> some ApplicationProtocol {
         logger: publicAssetsLogger
       ),
       logger: publicAssetsLogger,
-      getFilePath: { _ in nil },
-      cache: {
-        #if DEBUG
-          return .noCache
-        #else
-          return .immutable
-        #endif
-      }()
+      getFilePath: { publicAssetsMapping[$0] },
+      cache: envVars.appEnv == .prod
+        ? .immutable
+        : .noCache
     )
     <<< routerMiddleware(logger: makeLogger(label: "Router"))
 
