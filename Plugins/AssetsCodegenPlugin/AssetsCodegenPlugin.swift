@@ -1,6 +1,10 @@
 import PackagePlugin
 import Foundation
 
+#if canImport(FoundationNetworking)
+  import FoundationNetworking
+#endif
+
 //private let defaultIgnoreFiles: Set<String> = [".DS_Store", ".gitkeep"]
 //func getInputFiles(publicAssetsRootPath: String) -> [Path] {
 //  let rootURL = URL(filePath: publicAssetsRootPath)
@@ -72,8 +76,8 @@ extension AssetsCodegenPlugin: BuildToolPlugin {
         """,
         executable: plumb.path,
         arguments: args,
-        environment: [:],
-//        inputFiles: inputFiles,
+//        environment: [:],
+        inputFiles: [],
         outputFiles: [ outputFilePath ]
       )
     ]

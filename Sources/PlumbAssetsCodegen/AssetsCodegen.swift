@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(FoundationNetworking)
+  import FoundationNetworking
+#endif
+
 enum AssetCodegenError: Error {
   case failedToEnumerate(String)
 }
@@ -89,6 +93,15 @@ func staticReferencesDeclr(
 
       var declrValue: String
       if checksum {
+        #if os(Linux)
+        let hash = bytes4(
+            try! Data(
+            contentsOf: URL(
+              fileURLWithPath: ([basePath] + pathComponents + [fileName]).joined(separator: "/")
+            )
+          )
+        )
+        #else
         let hash = bytes4(
           try! Data(
             contentsOf: URL(
@@ -96,6 +109,7 @@ func staticReferencesDeclr(
             )
           )
         )
+        #endif
         var fileNameComponents = fileName.split(separator: ".")
         let ext = fileNameComponents.removeLast()
         let fileNameWithHash = fileNameComponents.joined(separator: ".") + "." + hash + "." + ext
