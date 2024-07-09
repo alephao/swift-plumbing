@@ -13,6 +13,7 @@ let package = Package(
     .library("Plumbing"),
     .library("PlumbingHttp"),
     .library("PlumbingHummingbird"),
+    .library("Webmanifest"),
     // Middlewares
     .library("LoggerMiddleware"),
     .library("PublicAssetsMiddleware"),
@@ -76,6 +77,13 @@ let package = Package(
         .product(name: "Logging", package: "swift-log"),
         .product(name: "NIOCore", package: "swift-nio"),
         .product(name: "Dependencies", package: "swift-dependencies"),
+      ]
+    ),
+    .target(
+      name: "Webmanifest",
+      dependencies: [
+        "Plumbing",
+        "PlumbingHummingbird",
       ]
     ),
     .target(
