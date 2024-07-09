@@ -30,11 +30,11 @@ public func assetsCodegen(
   let enumName = "PublicAsset"
   let dictName = "publicAssetsMapping"
   let emptyFile = """
-  extension \(enumName) { }
+    extension \(enumName) { }
 
-  public let \(dictName): [String: String] = [:]
+    public let \(dictName): [String: String] = [:]
 
-  """
+    """
 
   let fileManager = FileManager.default
 
@@ -94,21 +94,21 @@ func staticReferencesDeclr(
       var declrValue: String
       if checksum {
         #if os(Linux)
-        let hash = bytes4(
+          let hash = bytes4(
             try! Data(
-            contentsOf: URL(
-              fileURLWithPath: ([basePath] + pathComponents + [fileName]).joined(separator: "/")
+              contentsOf: URL(
+                fileURLWithPath: ([basePath] + pathComponents + [fileName]).joined(separator: "/")
+              )
             )
           )
-        )
         #else
-        let hash = bytes4(
-          try! Data(
-            contentsOf: URL(
-              filePath: ([basePath] + pathComponents + [fileName]).joined(separator: "/")
+          let hash = bytes4(
+            try! Data(
+              contentsOf: URL(
+                filePath: ([basePath] + pathComponents + [fileName]).joined(separator: "/")
+              )
             )
           )
-        )
         #endif
         var fileNameComponents = fileName.split(separator: ".")
         let ext = fileNameComponents.removeLast()

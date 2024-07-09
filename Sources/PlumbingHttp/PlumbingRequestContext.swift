@@ -13,7 +13,6 @@ public struct PlumbingRequestContext: RequestContext {
   public var requestDecoder: PlumbingRequestContext.Decoder { .init() }
   public var responseEncoder: PlumbingRequestContext.Encoder { .init() }
 
-
   public init(source: some RequestContextSource) {
     self.coreContext = .init(source: source)
   }

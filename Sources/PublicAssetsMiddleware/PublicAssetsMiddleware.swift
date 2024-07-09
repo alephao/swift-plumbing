@@ -93,7 +93,11 @@ private func loadFile(
         if let extPointIndex = path.lastIndex(of: ".") {
           let extIndex = path.index(after: extPointIndex)
           let ext = String(path.suffix(from: extIndex))
-          if let contentType = MediaType.getMediaType(forExtension: ext) {
+
+          if ext == "webmanifest" {
+            headers[.contentType] = "application/manifest+json"
+            headers[.cacheControl] = cache.value(for: .textPlain)  // Any value, doens't matter
+          } else if let contentType = MediaType.getMediaType(forExtension: ext) {
             headers[.contentType] = contentType.description
             headers[.cacheControl] = cache.value(for: contentType)
           }
