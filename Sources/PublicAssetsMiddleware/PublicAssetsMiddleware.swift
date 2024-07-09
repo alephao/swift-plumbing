@@ -11,7 +11,7 @@ public enum CacheRule {
   public func value(for mediaType: MediaType) -> String {
     switch self {
     case .noCache: return "no-cache"
-    case .immutable: return "max-age=31536000, s-maxage=31536000, immutable"
+    case .immutable: return "public, max-age=31536000, s-maxage=31536000, immutable"
     case .custom(let f): return f(mediaType)
     }
   }
