@@ -22,7 +22,7 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
     .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
-    .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-beta.5"),
+    .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-rc.2"),
     .package(url: "https://github.com/alephao/swift-prelude.git", from: "0.7.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
     .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.0.0"),

@@ -14,7 +14,9 @@ public func publicAssetsMiddleware(
         return await next()
       }
 
-      let fullPath = localFileSystem.getFullPath(assetPath)
+      guard let fullPath = localFileSystem.getFileIdentifier(assetPath) else {
+        return .init(status: .notFound)
+      }
 
       let res = await AsyncResult<String, Response>.success(fullPath)
         .prepend(getFileAttributes(localFileSystem))
@@ -33,7 +35,7 @@ private func getFileAttributes(
     .init {
       do {
         guard
-          let attributes = try await fs.getAttributes(path: path),
+          let attributes = try await fs.getAttributes(id: path),
           !attributes.isFolder
         else {
           return .failure(.init(status: .notFound))
@@ -58,7 +60,7 @@ private func loadFile(_ fs: LocalFileSystem)
       let attributes = get1(t)
       let path = rest(t)
       do {
-        let body = try await fs.loadFile(path: path, context: Ctx.ctx)
+        let body = try await fs.loadFile(id: path, context: Ctx.ctx)
 
         var headers: HTTPFields = [
           .contentLength: String(describing: attributes.size)

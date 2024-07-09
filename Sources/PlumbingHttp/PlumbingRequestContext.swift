@@ -8,13 +8,14 @@ import NIOCore
 #endif
 
 public struct PlumbingRequestContext: RequestContext {
-  public var coreContext: CoreRequestContext
+  public var coreContext: CoreRequestContextStorage
 
   public var requestDecoder: PlumbingRequestContext.Decoder { .init() }
   public var responseEncoder: PlumbingRequestContext.Encoder { .init() }
 
-  public init(channel: any Channel, logger: Logger) {
-    self.coreContext = .init(allocator: channel.allocator, logger: logger)
+
+  public init(source: some RequestContextSource) {
+    self.coreContext = .init(source: source)
   }
 }
 
@@ -24,7 +25,7 @@ extension PlumbingRequestContext {
       case invalidContentType
     }
 
-    public func decode<T>(_ type: T.Type, from request: Request, context: some BaseRequestContext)
+    public func decode<T>(_ type: T.Type, from request: Request, context: some RequestContext)
       async throws -> T where T: Decodable
     {
       switch request.headers[values: .contentType].first {
@@ -46,7 +47,7 @@ extension PlumbingRequestContext {
     public func encode(
       _ value: some Encodable,
       from request: Request,
-      context: some BaseRequestContext
+      context: some RequestContext
     )
       throws -> Response
     {
