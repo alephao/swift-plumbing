@@ -12,7 +12,7 @@ public func webmanifestHandler(
     var headers: HTTPFields = [
       .contentType: "application/manifest+json"
     ]
-    if (cache) {
+    if cache {
       headers[.cacheControl] = "public, max-age=31536000, s-maxage=31536000, immutable"
     }
     return .success(
