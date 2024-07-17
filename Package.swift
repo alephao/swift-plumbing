@@ -85,6 +85,7 @@ let package = Package(
         .product(name: "Logging", package: "swift-log"),
         .product(name: "NIOCore", package: "swift-nio"),
         .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "Html", package: "swift-html"),
       ]
     ),
     .target(
