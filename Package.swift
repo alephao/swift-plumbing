@@ -13,6 +13,7 @@ let package = Package(
     .library("Plumbing"),
     .library("PlumbingHttp"),
     .library("PlumbingHummingbird"),
+    .library("HtmlUtils"),
     .library("Webmanifest"),
     // Middlewares
     .library("LoggerMiddleware"),
@@ -26,9 +27,16 @@ let package = Package(
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-rc.2"),
     .package(url: "https://github.com/alephao/swift-prelude.git", from: "0.7.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
+    .package(url: "https://github.com/alephao/swift-html", from: "0.5.0"),
     .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.0.0"),
   ],
   targets: [
+    .target(
+      name: "HtmlUtils",
+      dependencies: [
+        .product(name: "Html", package: "swift-html"),
+      ]
+    ),
     .executableTarget(
       name: "plumb",
       dependencies: [
