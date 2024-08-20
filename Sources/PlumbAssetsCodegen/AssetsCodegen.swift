@@ -118,7 +118,11 @@ func staticReferencesDeclr(
         declrValue = "/" + (pathComponents + [fileName]).joined(separator: "/")
       }
 
-      let declr = "public static let \(variableName): String = \"\(declrValue)\""
+      let varName =
+        (variableName.first?.isNumber ?? false)
+        ? "_\(variableName)"
+        : variableName
+      let declr = "public static let \(varName): String = \"\(declrValue)\""
       return indentLine(pathComponents.count + 1)(declr)
     case .dir(let dirName, let subpaths):
       if subpaths.count == 0 { return nil }
@@ -149,7 +153,11 @@ func dictDeclr(
     switch f {
     case .file(let fileName):
       let variableName = kebabToSnakeCase(specialCharsToUnderscore(fileName))
-      let key = ([rootEnumName] + (pathComponents.map(kebabToSnakeCase)) + [variableName])
+      let varName =
+        (variableName.first?.isNumber ?? false)
+        ? "_\(variableName)"
+        : variableName
+      let key = ([rootEnumName] + (pathComponents.map(kebabToSnakeCase)) + [varName])
         .joined(separator: ".")
 
       let value: String
