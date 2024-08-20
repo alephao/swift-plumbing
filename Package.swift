@@ -35,7 +35,7 @@ let package = Package(
     .target(
       name: "HtmlUtils",
       dependencies: [
-        .product(name: "Html", package: "swift-html"),
+        .product(name: "Html", package: "swift-html")
       ]
     ),
     .executableTarget(
