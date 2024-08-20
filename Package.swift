@@ -18,6 +18,7 @@ let package = Package(
     // Middlewares
     .library("LoggerMiddleware"),
     .library("PublicAssetsMiddleware"),
+    .library("ErrorFallbackMiddleware"),
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0"),
@@ -110,6 +111,13 @@ let package = Package(
         "PlumbingHummingbird",
         .product(name: "Logging", package: "swift-log"),
         .product(name: "Dependencies", package: "swift-dependencies"),
+      ]
+    ),
+    .target(
+      name: "ErrorFallbackMiddleware",
+      dependencies: [
+        "Plumbing",
+        "PlumbingHummingbird",
       ]
     ),
   ]
