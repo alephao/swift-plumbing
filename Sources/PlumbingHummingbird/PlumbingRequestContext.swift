@@ -22,14 +22,23 @@ public struct PlumbingRequestContext: RequestContext {
       case invalidContentType
     }
 
-    public func decode<T>(_ type: T.Type, from request: Request, context: some RequestContext)
+    public func decode<T>(
+      _ type: T.Type,
+      from request: Request,
+      context: some RequestContext
+    )
       async throws -> T where T: Decodable
     {
       switch request.headers[values: .contentType].first {
       case "application/json":
-        return try await JSONDecoder().decode(type, from: request, context: context)
+        var decoder = JSONDecoder()
+        decoder.userInfo = [.init(rawValue: "content-type")!: "application/json"]
+        return try await decoder.decode(type, from: request, context: context)
       case "application/x-www-form-urlencoded":
-        return try await URLEncodedFormDecoder().decode(type, from: request, context: context)
+        let decoder = URLEncodedFormDecoder(userInfo: [
+          .init(rawValue: "content-type")!: "application/x-www-form-urlencoded"
+        ])
+        return try await decoder.decode(type, from: request, context: context)
       default:
         throw Error.invalidContentType
       }
