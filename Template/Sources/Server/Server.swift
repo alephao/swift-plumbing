@@ -13,7 +13,7 @@ struct Server: AsyncParsableCommand {
         .load()
     #endif
 
-    let app = buildApplication()
+    let app = try await buildApplication()
     try await app.runService()
   }
 }

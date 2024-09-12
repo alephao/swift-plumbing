@@ -15,13 +15,14 @@ let package = Package(
     .plumb(.envVars),
   ],
   dependencies: [
-    .package(name: "swift-plumbing", path: "../"),
+    //    .package(name: "swift-plumbing", path: "../"),
+    .package(url: "https://github.com/alephao/swift-plumbing.git", exact: "0.29.0"),
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
     .package(url: "https://github.com/pointfreeco/swift-url-routing.git", from: "0.6.0"),
     .package(url: "https://github.com/pointfreeco/swift-case-paths.git", from: "1.0.0"),
-    .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0-beta.5"),
+    .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.0.0"),
   ],
   targets: [
     .executableTarget(

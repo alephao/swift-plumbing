@@ -1,5 +1,5 @@
 {
-  "originHash" : "d2440149d8dc13a37f59c4c5e8ea1d66cb224964e41748eda6a2c0378214b0d6",
+  "originHash" : "09d39c49c62758cf933f094d4c06f72073c9d86e5ee8467637f7a7cf2628a566",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird.git",
       "state" : {
-        "revision" : "aed1e369c331f2c20780317e657d139e20522ada",
-        "version" : "2.0.0-beta.5"
+        "revision" : "6c568da113a7abe712e4a00883a85ff7745d6929",
+        "version" : "2.0.0"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "bc1c29221f6dfeb0ebbfbc98eb95cd3d4967868e",
-        "version" : "3.4.0"
+        "revision" : "9f95b4d033a4edd3814b48608db3f2ca90c7218b",
+        "version" : "3.7.0"
       }
     },
     {
@@ -125,6 +125,15 @@
       "state" : {
         "revision" : "11c756c5c4d7de0eeed8595695cadd7fa107aa19",
         "version" : "1.1.1"
+      }
+    },
+    {
+      "identity" : "swift-html",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-html.git",
+      "state" : {
+        "revision" : "be9d301d0d2ed432a57d10c5ab7a1183bd1afce8",
+        "version" : "0.4.1"
       }
     },
     {
@@ -218,6 +227,15 @@
       }
     },
     {
+      "identity" : "swift-plumbing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alephao/swift-plumbing.git",
+      "state" : {
+        "revision" : "470e47492b59824f1d3695b293898ad1c911d6c1",
+        "version" : "0.29.0"
+      }
+    },
+    {
       "identity" : "swift-prelude",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alephao/swift-prelude.git",
@@ -242,6 +260,15 @@
       "state" : {
         "revision" : "d58e6bf2b1ae2884cf204a8b5bcaaa7aae3c1ff0",
         "version" : "2.6.0"
+      }
+    },
+    {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
+      "state" : {
+        "revision" : "7b0bbbae90c41f848f90ac7b4df6c4f50068256d",
+        "version" : "1.17.5"
       }
     },
     {

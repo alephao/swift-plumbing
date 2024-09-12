@@ -1,5 +1,4 @@
-import Dependencies
-import Deps  // Deps export Router and EnvVars
+import Deps
 import Hummingbird
 import LoggerMiddleware
 import Logging
@@ -16,7 +15,7 @@ func makeLogger(label: String) -> Logger {
   return logger
 }
 
-public func buildApplication() -> some ApplicationProtocol {
+public func buildApplication() async throws -> some ApplicationProtocol {
   @Dependency(\.logger) var logger
   @Dependency(\.envVars) var envVars
 
